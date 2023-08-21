@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Welcome{% endblock title %}
+{% block hero %}
+  <!-- Hero Section - Home Page -->
+  <section id="hero" class="hero">
+      <img src="{% static 'assets/img/services.jpg' %}" class="img-fluid" alt="" data-aos="fade-in">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-10">
+            <h2 data-aos="fade-up" data-aos-delay="100">Welcome to Our Website</h2>
+            <p data-aos="fade-up" data-aos-delay="200">We are team of talented designers making websites with Bootstrap</p>
+          </div>
+          <div class="col-lg-5">
+            <form action="{% url 'subscribe' %}" method="POST" class="sign-up-form d-flex" data-aos="fade-up" data-aos-delay="100">
+              {% csrf_token %}
+                <input type="text" name="email" class="form-control" placeholder="Enter email address">
+                <button  class="btn btn-primary"><i class="bi bi-bell-fill"></i></button>
+            </form>
+        </div>
+      </div>
+      </div>
+  </section><!-- End Hero Section -->
+{% endblock hero %}
+    <div class="container">    
+      {% include 'inc/sms.html' %}
+
+    </div>
+{% block content %}
+    <!-- Blog Page Title & Breadcrumbs -->
+    <div data-aos="fade" class="page-title mb-2">
+        <nav class="breadcrumbs">
+            <div class="container">
+                <ol>
+                    <li><a href="#">Home </a>/</li>
+                </ol>
+            </div>
+        </nav>
+    </div><!-- End Page Title -->
+    <!-- Blog Section - Blog Page -->
+    {% include 'inc/blog.html' %}
+   <!-- End Blog Section -->
+    <!-- Features Section - Home Page -->
+    <section id="about" class="features mb-2">
+
+        <!--  Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+            <h2>Features</h2>
+            <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+        </div><!-- End Section Title -->
+    
+        <div class="container">
+    
+            <div class="row gy-4 align-items-center features-item">
+                <div class="col-lg-5 order-2 order-lg-1" data-aos="fade-up" data-aos-delay="200">
+                    <h3>Corporis temporibus maiores provident</h3>
+                    <p>
+                    Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+                    velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+                    </p>
+                    <a href="#" class="btn btn-get-started">Get Started</a>
+                </div>
+                <div class="col-lg-7 order-1 order-lg-2 d-flex align-items-center" data-aos="zoom-out" data-aos-delay="100">
+                    <div class="image-stack">
+                        <img src="{% static 'assets/img/features-light-1.jpg' %}" alt="" class="stack-front">
+                        <img src="{% static 'assets/img/features-light-2.jpg' %}" alt="" class="stack-back">
+                    </div>
+                </div>
+            </div><!-- Features Item -->
+    
+            <div class="row gy-4 align-items-stretch justify-content-between features-item ">
+                <div class="col-lg-6 d-flex align-items-center features-img-bg" data-aos="zoom-out">
+                    <img src="{% static 'assets/img/features-light-3.jpg' %}" class="img-fluid" alt="">
+                </div>
+                <div class="col-lg-5 d-flex justify-content-center flex-column" data-aos="fade-up">
+                    <h3>Sunt consequatur ad ut est nulla</h3>
+                    <p>Cupiditate placeat cupiditate placeat est ipsam culpa. Delectus quia minima quod. Sunt saepe odit aut quia voluptatem hic voluptas dolor doloremque.</p>
+                    <ul>
+                        <li><i class="bi bi-check"></i> <span>Ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></li>
+                        <li><i class="bi bi-check"></i><span> Duis aute irure dolor in reprehenderit in voluptate velit.</span></li>
+                        <li><i class="bi bi-check"></i> <span>Facilis ut et voluptatem aperiam. Autem soluta ad fugiat</span>.</li>
+                    </ul>
+                    <a href="#" class="btn btn-get-started align-self-start">Get Started</a>
+                </div>
+            </div><!-- Features Item -->
+    
+        </div>
+    
+    </section><!-- End Features Section -->
+
+    <section id="portfolio" class=" mb-4 portfolio">
+        <!--  Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Portfolio</h2>
+          <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+        </div><!-- End Section Title -->
+        
+        <div class="container">
+  
+          <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+            <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
+               {% for folio in portfolio %}
+                {% if folio.picture %}
+                  <div class="col-md-4 portfolio-item isotope-item filter-app">
+                    <img src="{{folio.picture.url}}" class="img-fluid" alt="">
+                    <div class="portfolio-info">
+                      <h4>{{folio.title}}</h4>
+                      <p>{{folio.description|slice:"20"}}</p>
+                      <a href="{{folio.picture.url}}" title="{{folio.title}}" data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                      <a href="{% url 'detail' folio.slug %}" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                    </div>
+                  </div>
+                  {% elif folio.cloudpicture %}
+                    <div class="col-md-4 portfolio-item isotope-item filter-app">
+                      <img src="{{folio.cloudpicture}}" class="img-fluid" alt="">
+                      <div class="portfolio-info">
+                        <h4>{{folio.title}}</h4>
+                        <p>{{folio.description|slice:"20"}}</p>
+                        <a href="{{folio.cloudpicture}}" title="{{folio.title}}" data-gallery="portfolio-gallery-app" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                        <a href="{% url 'detail' folio.slug %}" title="More Details" class="details-link"><i class="bi bi-link-45deg"></i></a>
+                      </div>
+                    </div>
+                  {% endif %}
+              {% endfor %}
+            </div>
+          </div><!-- End Portfolio Container -->
+        </div>
+    </section><!-- End Portfolio Section -->
+    
+{% endblock content %}
+

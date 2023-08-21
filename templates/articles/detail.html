@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block title %}{{article.title}}{% endblock title %}
+
+{% block content %}
+<!-- Blog Details Page Title & Breadcrumbs -->
+<div data-aos="fade" class="page-title">
+    <nav class="breadcrumbs">
+        <div class="container">
+        <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Blog Details</li>
+        </ol>
+        </div>
+    </nav>
+    </div><!-- End Page Title -->
+    <div class="container">    
+      {% include 'inc/sms.html' %}
+    </div>
+    <!-- Blog-details Section - Blog Details Page -->
+    <section id="blog-details" class="blog-details">
+        <div class="container ">
+            <div class="row g-5">
+                <div class="col-md-8 bg-detail p-3">
+                    <div class="bg-detail article ">
+                        <div class="post-img">
+                            {% if article.picture %}
+                                <img src="{{article.picture.url}}" alt="" class="img-fluid">
+                            {% elif article.cloudpicture %} 
+                                <img src="{{article.cloudpicture}}" alt="" class="img-fluid">
+                            {% elif article.category.picture.url %} 
+                                <img src="{{article.category.picture.url}}" alt="" class="img-fluid">
+                            {% else %}
+                                <img src="{{article.category.cloudpicture}}" alt="" class="img-fluid">
+                            {% endif %}
+                        </div>
+                        <h4 class="title">{{article.title}}</h4>
+                        <div class="meta-top">
+                            <ul>
+                                <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="blog-details.html">{{article.author.name}}</a></li>
+                                <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="blog-details.html"><time datetime="2020-01-01">{{article.created_at}}</time></a></li>
+                                <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="blog-details.html">12</a></li>
+                            </ul>
+                        </div><!-- End meta top -->
+                        <div class="content">
+                            <p> {{article.description|strong|list|safe|urlize}} </p>
+                                {% for article in s_articles %}
+                                    <h4 class="title">{{article.sub_title}}</h4>
+                                    {% if article.picture %}
+                                        <img src="{{article.picture.url}}" alt="" class="img-fluid">
+                                    {% elif article.cloudpicture %} 
+                                        <img src="{{article.cloudpicture}}" alt="" class="img-fluid">
+                                    {% endif %}
+                                    <p class="content" >{{article.description}}</p>
+                                {% endfor %}
+                        </div>
+                    </div>
+                    <div class="blog-author">
+                        <div class="row">
+                            <div class="col-md-4">
+                                {% if article.author.picture %}
+                                    <img src="{{article.author.picture.url}}" class="rounded-circle flex-shrink-0" alt="">
+                                {% elif article.author.cloudpicture %}
+                                    <img src="{{article.author.cloudpicture}}" class="rounded-circle flex-shrink-0" alt="">
+                                {% else %}
+                                    <img src="{% static 'assets/img/blog/comments-2.jpg' %}" class="rounded-circle flex-shrink-0" alt="">
+                                {% endif %}
+                            </div>
+                        <div class="col-md-8">
+                            <div>
+                                <h4>{{article.author.name}}</h4>
+                                <div class="social-links">
+                                    {% if article.author.twitter %}
+                                        <a href="{{article.author.twitter}}"><i class="bi bi-twitter"></i></a>
+                                    {% endif %}
+                                    {% if article.author.facebook %}
+                                        <a href="{{article.author.facebook}}"><i class="bi bi-facebook"></i></a>
+                                    {% endif %}
+                                    {% if article.author.whatsapp %}
+                                        <a href="{{article.author.whatsapp}}"><i class="biu bi-whatsapp"></i></a>
+                                    {% endif %}
+                                </div>
+                                <p> {{article.author.description}} </p>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="comments">
+                    <div class="comments-count h4">8 comments</div>
+                    {% for comment in comments %}
+                        <div class="comment">
+                            <div class="d-flex">
+                                <div class="comment-img">
+                                    <img src="{% static 'assets/img/blog/comments-2.jpg' %}" alt=""></div>
+                                <div>
+                                    <h5><a href="">{{comment.username}}</a></h5>
+                                    <time datetime="2020-01-01">{{comment.created_at}}</time>
+                                    <p>
+                                    {{comment.content}}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                    <div class="mt-3">
+                        <h3 class="mb-2">Post comment</h3>
+
+                        <form method="POST" action="{% url 'postcomment' %}">
+                            <input type="text" hidden="true" value="{{article.slug}}" name="slug">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label mb-2" for="name">Your name*</label>
+                                    <input required type="text" id="name" placeholder="Name" class="form-control border-secondary mb-2 py-2" name="username">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label mb-2" for="email">Your email*</label>
+                                    <input required type="email" id="email" placeholder="Email" class="form-control border-secondary mb-2 py-2" name="email">
+                                </div>
+                            </div>
+                            <label class="form-label  mb-2" for="comment-post">Your comment*</label>
+                            <textarea id="comment-post" required placeholder="Your comment" class="form-control border-secondary mb-2 py-2" name="content"></textarea>
+                            <button type="submit" class="btn btn-primary mt-2 p-2">Poster</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="sidebar">
+                        <div class="sidebar-item search-form">
+                            <h3 class="sidebar-title">Search</h3>
+                            <form action="{% url 'blog' %}" method="GET" class="mt-3">
+                            <input type="text" name="article">
+                            <button type="submit"><i class="bi bi-search"></i></button>
+                            </form>
+                        </div><!-- End sidebar search formn-->
+
+                        <div class="sidebar-item categories">
+                            <h3 class="sidebar-title">Categories</h3>
+                            <ul class="mt-3">
+                                {% for category in categorys %}
+                                    <li>&marker; <a href="{% url 'blog' %}?category={{category.slug}}">{{category.name}}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div><!-- End sidebar categories-->
+
+                        <div class="sidebar-item recent-posts">
+                            <h3 class="sidebar-title">Recent Posts</h3>
+                            {% for post in recent_post %}
+                                <div class="post-item">
+                                    {% if post.picture %}
+                                        <img src="{{post.picture.url}}" alt="" class="flex-shrink-0">
+                                        {% elif post.cloudpicture %} 
+                                            <img src="{{post.cloudpicture}}" alt="" class="flex-shrink-0">
+                                        {% elif post.category.picture.url %} 
+                                            <img src="{{post.category.picture.url}}" alt="" class="flex-shrink-0">
+                                        {% else %}
+                                            <img src="{{post.category.cloudpicture}}" alt="" class="flex-shrink-0">
+                                        {% endif %}
+                                    
+                                    <div>
+                                        <h4><a href="blog-details.html">{{post.title}}</a></h4>
+                                        <time datetime="2020-01-01">{{post.created_at}}</time>
+                                    </div>
+                                </div><!-- End recent post item-->
+                            {% endfor %}
+                        </div><!-- End sidebar recent posts-->
+
+                        <div class="sidebar-item tags">
+                            {% if tags %}
+                                <h3 class="sidebar-title">Tags</h3>
+                                <ul class="mt-3">
+                                    {% for tag in tags %}
+                                        <li><a href="{% url 'blog' %}?tag={{tag.slug}}">{{tag.name}}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div><!-- End sidebar tags-->
+
+                    </div><!-- End Sidebar -->
+                </div>
+            </div>
+        </div>
+
+    </section><!-- End Blog-details Section -->
+{% endblock content %}

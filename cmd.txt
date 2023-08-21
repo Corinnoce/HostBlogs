@@ -1,0 +1,7 @@
+installer l'environnement virtuel
+pip install virtualenv
+creer un environnement virtuelle
+virtualenv env
+activer l'environnement virtuel
+source env/scripts/activate
+

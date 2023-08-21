@@ -1,0 +1,59 @@
+{% load static %}
+    <section id="blog" class="blog mb-2">
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+            <div class="row gy-4 posts-list">
+                {% for article in articles %}
+                    <div class="col-xl-4 mb-2 col-lg-6">
+                        <article>
+                          <a href="{% url 'detail' article.slug %}">
+                          <div class="post-img">
+                              {% if article.picture %}
+                                <img src="{{article.picture.url}}" alt="" class="img-fluid">
+                              {% elif article.cloudpicture %} 
+                                <img src="{{article.cloudpicture}}" alt="" class="img-fluid">
+                              {% elif article.category.picture.url %} 
+                                <img src="{{article.category.picture.url}}" alt="" class="img-fluid">
+                              {% else %}
+                                <img src="{{article.category.cloudpicture}}" alt="" class="img-fluid">
+                              {% endif %}
+                          </div>
+                          <p class=" text-primary ">{{article.category.name}}</p>
+                          <h2 class="title  text-primary ">
+                              {{article.title}}
+                          </h2>
+                          <div class="d-flex align-items-center">
+                            {% if article.author.cloudpicture %}
+                              <img src="{{article.author.cloudpicture}}" alt="" class="img-fluid post-author-img flex-shrink-0">
+                            {% elif article.author.picture.url %}
+                              <img src="{{article.author.picture.url}}" alt="" class="img-fluid post-author-img flex-shrink-0">
+                            {% else %}
+                              <img src="{% static 'assets/img/blog/blog-author.jpg' %}" alt="" class="img-fluid post-author-img flex-shrink-0">
+                            {% endif %}
+                              <div class="post-meta">
+                              <p class="post-author text-secondary">{{article.author.name}}</p>
+                              <p class="post-date">
+                                  <time datetime="2022-01-01">{{article.created_at}}</time>
+                              </p>
+                              </div>
+                          </div>
+                          </a>
+                        </article>
+                    </div><!-- End post list item -->
+                {% endfor %}
+            </div><!-- End blog posts list -->
+
+            <div class="pagination mb-2 d-flex justify-content-center">
+            <ul>
+              {% if articles.has_previous %}
+                <li><a href="?page={{articles.previous_page_number}}">{{articles.previous_page_number}}</a></li>
+              {% endif %}
+                <li class="active"><a href="#">{{articles.number}}</a></li>
+              {% if articles.has_next %} 
+                <li><a href="?page={{articles.next_page_number}}">{{articles.next_page_number}}</a></li>
+              {% endif %}
+             
+            </ul>
+            </div><!-- End pagination -->
+
+        </div>
+    </section><!-- End Blog Section -->
